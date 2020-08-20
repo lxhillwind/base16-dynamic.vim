@@ -13,28 +13,6 @@
 " Material: Nate Peterson <https://github.com/ntpeters/base16-materialtheme-scheme>
 " One Light: Daniel Pfeifer <https://github.com/purpleKarrot/base16-one-light-scheme>
 
-" validate pallet {{{
-let s:valid = 0
-if exists('g:base16#pallet')
-  if type(g:base16#pallet) == v:t_dict
-    let s:valid = 1
-    for key in range(16)
-      if get(g:base16#pallet, printf('base%02X', key)) !~? '\v[0-9a-f]{6}'
-        let s:valid = 0
-        break
-      endif
-    endfor
-  endif
-endif
-
-if empty(s:valid)
-  echohl ErrorMsg
-  echo 'ERROR: colorscheme base16-dynamic: g:base16#pallet invalid'
-  echohl None
-  finish
-endif
-" }}}
-
 " Configuration:
 let g:base16#enable_italics = get(g:, 'base16#enable_italics', 1)
 let g:base16#pallet#dark = get(g:, 'base16#pallet#dark', {"scheme": "Material", "author": "Nate Peterson", "base00": "263238", "base01": "2E3C43", "base02": "314549", "base03": "546E7A", "base04": "B2CCD6", "base05": "EEFFFF", "base06": "EEFFFF", "base07": "FFFFFF", "base08": "F07178", "base09": "F78C6C", "base0A": "FFCB6B", "base0B": "C3E88D", "base0C": "89DDFF", "base0D": "82AAFF", "base0E": "C792EA", "base0F": "FF5370"})
@@ -45,6 +23,28 @@ if &bg == 'dark'
 else
   let s:base16_pallet = g:base16#pallet#light
 endif
+
+" validate pallet {{{
+let s:valid = 0
+if type(s:base16_pallet) == v:t_dict
+  let s:valid = 1
+  for key in range(16)
+    if get(s:base16_pallet, printf('base%02X', key)) !~? '\v[0-9a-f]{6}'
+      let s:valid = 0
+      break
+    endif
+  endfor
+endif
+
+if empty(s:valid)
+  echohl ErrorMsg
+  echo printf('ERROR: colorscheme base16-dynamic: g:base16#pallet#%s invalid', &bg)
+  echohl None
+  finish
+endif
+
+unlet s:valid
+" }}}
 
 " GUI color definitions
 let s:gui00 = s:base16_pallet['base00']
