@@ -26,7 +26,7 @@ endif
 
 " validate pallet {{{
 let s:valid = 0
-if type(s:base16_pallet) == v:t_dict
+if type(s:base16_pallet) == type({})
   let s:valid = 1
   for key in range(16)
     if get(s:base16_pallet, printf('base%02X', key)) !~? '\v[0-9a-f]{6}'
